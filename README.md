@@ -79,4 +79,11 @@ tests/               pytest suite (synthetic PSD fixtures)
 
 ## License
 
-See [LICENSE](LICENSE).
+This project is released under the MIT License.
+
+You may use, copy, modify, merge, publish, distribute, sublicense, and sell copies
+of the software, provided that the original copyright notice and license text are
+included with substantial portions of the software.
+
+The software is provided "as is", without warranty of any kind. See
+[LICENSE](LICENSE) for the full license text.
