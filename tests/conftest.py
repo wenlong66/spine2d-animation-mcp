@@ -1,0 +1,70 @@
+"""Synthetic PSD fixture so the pipeline is testable without a real PSD.
+
+Builds a minimal humanoid from colored rectangles with body-part layer names,
+laid out roughly anatomically in PSD (y-down) coordinates.
+"""
+
+from __future__ import annotations
+
+import pytest
+from PIL import Image
+from psd_tools import PSDImage
+from psd_tools.api.layers import PixelLayer
+
+# (name, left, top, width, height) in PSD coords (y-down, origin top-left).
+# Canvas 400x600; head on top, body center, arms/legs around it.
+_PARTS = [
+    ("head", 160, 20, 80, 80),
+    ("body", 150, 110, 100, 180),
+    ("arm_left", 100, 120, 40, 140),
+    ("arm_right", 260, 120, 40, 140),
+    ("hand_left", 95, 260, 40, 40),
+    ("hand_right", 265, 260, 40, 40),
+    ("leg_left", 150, 300, 45, 180),
+    ("leg_right", 205, 300, 45, 180),
+    ("foot_left", 145, 480, 60, 30),
+    ("foot_right", 205, 480, 60, 30),
+]
+
+_COLORS = [
+    (220, 100, 100, 255), (100, 180, 220, 255), (120, 200, 120, 255),
+    (200, 200, 100, 255), (200, 120, 200, 255), (120, 200, 200, 255),
+    (180, 140, 100, 255), (140, 140, 200, 255), (200, 160, 120, 255),
+    (160, 200, 160, 255),
+]
+
+CANVAS = (400, 600)
+
+
+def _save_psd(tmp_path, parts):
+    """parts: list of (name, left, top, w, h, color). Appended in order, so
+    psd-tools z-order (bottom-to-top) matches list order."""
+    psd = PSDImage.new("RGBA", CANVAS, color=(0, 0, 0, 0))
+    for name, left, top, w, h, color in parts:
+        tile = Image.new("RGBA", (w, h), color)
+        psd.append(PixelLayer.frompil(tile, psd, name, top=top, left=left))
+    path = tmp_path / "test_character.psd"
+    psd.save(path)
+    return str(path)
+
+
+@pytest.fixture
+def synthetic_psd(tmp_path):
+    parts = [
+        (name, l, t, w, h, c)
+        for (name, l, t, w, h), c in zip(_PARTS, _COLORS)
+    ]
+    return _save_psd(tmp_path, parts)
+
+
+@pytest.fixture
+def make_psd(tmp_path):
+    """Factory: build a PSD from custom (name, left, top, w, h) tuples."""
+    def _make(layers):
+        parts = [
+            (name, l, t, w, h, _COLORS[i % len(_COLORS)])
+            for i, (name, l, t, w, h) in enumerate(layers)
+        ]
+        return _save_psd(tmp_path, parts)
+
+    return _make

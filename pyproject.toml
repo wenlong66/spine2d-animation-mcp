@@ -1,0 +1,32 @@
+[project]
+name = "spine2d-mcp"
+version = "0.1.0"
+description = "MCP server that converts PSD characters into Spine 4.2 projects for Unity"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "mcp>=1.2.0",
+    "psd-tools>=1.9.32",
+    "Pillow>=10.0.0",
+    "rectpack>=0.2.2",
+    "pydantic>=2.6.0",
+]
+
+[project.scripts]
+spine2d-mcp = "spine2d_mcp.server:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/spine2d_mcp"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

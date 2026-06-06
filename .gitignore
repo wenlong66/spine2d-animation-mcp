@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+*.egg-info/
+*.egg
+
+# uv / virtual env
+.venv/
+venv/
+ENV/
+env/
+
+# Secrets / environment
+.env
+.env.*
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Test / tool caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Logs
+*.log
+
+# Generated character artifacts (PSD inputs / atlas pages / previews)
+*.psd
+*.gif
+*.mp4
+/output/
+/storage/
+
+# Local archive of the original prototype — kept locally, not published
+archive/
+
+# Session/handoff working files — local only, not for the public repo
+CLAUDE.md
+AGENTS.md
+tasks.md
+journal.md
+session-handoff.md
